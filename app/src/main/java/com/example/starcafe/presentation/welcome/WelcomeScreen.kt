@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -65,7 +66,13 @@ fun WelcomeScreen(navController: NavController) {
             Button(
                 onClick = { navController.navigate("home") },
 
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00AEEF))
+                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00AEEF)),
+
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
+                    .padding(start = 16.dp, end = 16.dp),
+                shape = RoundedCornerShape(10.dp)
             ) {
                 Text("Get Started", color = Color.White)
             }
