@@ -1,14 +1,17 @@
 package com.example.starcafe.components
 
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.BottomNavigationItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -56,9 +59,19 @@ fun RowScope.BottomNavItem(
             Icon(
                 modifier = Modifier.size(24.dp),
                 imageVector = item.icon,
-                contentDescription = "BottomNavIcon"
+                contentDescription = "BottomNavIcon",
+                tint = Color(0xFF999999)
             )
         },
+        label = {
+            Text(
+                text = item.label,
+                color = Color.White,
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.labelSmall
+            )
+        },
+        alwaysShowLabel = true,
         selectedContentColor = Color(0xFFFFA726),
         unselectedContentColor = Color.Gray
     )

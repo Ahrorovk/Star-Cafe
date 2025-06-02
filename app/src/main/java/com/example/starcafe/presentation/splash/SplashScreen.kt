@@ -28,13 +28,13 @@ fun SplashScreen(navController: NavController) {
         contentAlignment = Alignment.Center
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            CircularProgressIndicator(color = Color.White)
+            Spacer(modifier = Modifier.height(16.dp))
             Text(
                 text = "LOADING...",
                 color = Color.White,
                 fontSize = 14.sp
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            CircularProgressIndicator(color = Color.White)
         }
     }
 }
