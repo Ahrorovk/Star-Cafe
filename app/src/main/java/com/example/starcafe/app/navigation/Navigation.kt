@@ -1,22 +1,36 @@
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.example.starcafe.app.navigation
 
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBackIosNew
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.ahrorovk.labwork.app.navigation.components.StarCafeBottomBar
-import com.example.starcafe.components.MenuTopBar
-import com.example.starcafe.components.ProfileTopBar
-import com.example.starcafe.components.RewardsTopBar
-import com.example.starcafe.components.SpecialOfferTopBar
 import com.example.starcafe.core.Routes
+import com.example.starcafe.core.doesScreenHasBottomBar
+import com.example.starcafe.core.doesScreenHasTopAppBar
+import com.example.starcafe.core.getTopBarTitle
 import com.example.starcafe.presentation.home.HomeScreen
 import com.example.starcafe.presentation.home.HomeViewModel
 import com.example.starcafe.presentation.menu.MenuScreen
@@ -32,42 +46,50 @@ fun Navigation() {
 
     val currentScreen = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
 
-    val bottomBarScreens = listOf(
-        Routes.Home.route,
-        Routes.Menu.route,
-        Routes.Rewards.route,
-        Routes.SpecialOffers.route,
-        Routes.Profile.route,
-        Routes.History.route
-    )
-
-    val rewardTopBarScreen = listOf(
-        Routes.Rewards.route
-    )
-    val menuTopBarScreen = listOf(
-        Routes.Menu.route
-    )
-    val profileTopBarScreen = listOf(
-        Routes.Profile.route,
-        Routes.History.route,
-        Routes.Contact.route,
-        Routes.Level.route
-    )
-    val specialOfferTopBarScreen = listOf(
-        Routes.SpecialOffers.route
-    )
 
     Scaffold(
         topBar = {
-            when (currentScreen) {
-                in rewardTopBarScreen -> RewardsTopBar()
-                in menuTopBarScreen -> MenuTopBar()
-                in profileTopBarScreen -> ProfileTopBar(navController)
-                in specialOfferTopBarScreen -> SpecialOfferTopBar()
+            if (doesScreenHasTopAppBar(currentScreen)) {
+                TopAppBar(
+                    title = {
+                        Text(
+                            getTopBarTitle(currentScreen),
+                            fontSize = 22.sp
+                        )
+                    },
+                    navigationIcon = {
+                        if (!doesScreenHasBottomBar(currentScreen)) {
+                            IconButton({
+                                navController.popBackStack()
+                            }) {
+                                Row(Modifier, verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(
+                                        Icons.Default.ArrowBackIosNew,
+                                        contentDescription = "ArrowBackIosNew"
+                                    )
+
+                                    Spacer(Modifier.padding(3.dp))
+
+                                    Text("Back", fontSize = 14.sp)
+                                }
+                            }
+                        }
+                    },
+                    actions = {
+                        if (currentScreen == Routes.Home.route) {
+                            IconButton({
+                                navController.navigate(Routes.Profile.route)
+                            }) {
+                                Icon(Icons.Default.Person, contentDescription = "Person")
+                            }
+                        }
+                    }
+                )
+
             }
         },
         bottomBar = {
-            if (currentScreen in bottomBarScreens) {
+            if (doesScreenHasBottomBar(currentScreen)) {
                 StarCafeBottomBar(navController, modifier = Modifier.padding(bottom = 50.dp))
             }
         },
@@ -80,8 +102,21 @@ fun Navigation() {
         ) {
             composable(Routes.Splash.route) { SplashScreen(navController) }
             composable(Routes.Welcome.route) { WelcomeScreen(navController) }
-            composable(Routes.Home.route) { HomeScreen(navController, hiltViewModel<HomeViewModel>()) }
-            composable(Routes.Rewards.route) { RewardsScreen(viewModel = hiltViewModel<RewardsViewModel>()) }
+            composable(Routes.Home.route) {
+                HomeScreen(
+                    navController,
+                    hiltViewModel<HomeViewModel>()
+                )
+            }
+            composable(Routes.Rewards.route) {
+                val viewModel = hiltViewModel<RewardsViewModel>()
+                val state = viewModel.state.collectAsState()
+                RewardsScreen(state.value) { intent ->
+                    when (intent) {
+                        else -> viewModel.onEvent(intent)
+                    }
+                }
+            }
             composable(Routes.Menu.route) { MenuScreen(viewModel = hiltViewModel<MenuViewModel>()) }
             /*composable(Routes.History.route) { HistoryScreen(navController) }
             composable(Routes.Profile.route) { ProfileScreen(navController) }

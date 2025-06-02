@@ -1,9 +1,8 @@
 package com.example.starcafe.presentation.menu
 
-import android.media.metrics.Event
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.starcafe.components.MenuFakeItems
+import com.example.starcafe.core.MenuFakeItems
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted

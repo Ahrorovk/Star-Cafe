@@ -1,14 +1,14 @@
 package com.example.starcafe.core
 
 sealed class Routes(val route: String) {
-    object Home:Routes("home")
-    object Splash:Routes("splash")
-    object Welcome:Routes("welcome")
-    object Rewards:Routes("rewards")
-    object Menu:Routes("menu")
-    object Level:Routes("level")
-    object History:Routes("history")
-    object Profile:Routes("profile")
-    object SpecialOffers:Routes("special_offers")
-    object Contact:Routes("contact")
+    object Home:Routes("Home")
+    object Splash:Routes("Splash")
+    object Welcome:Routes("Welcome")
+    object Rewards:Routes("Eewards")
+    object Menu:Routes("Menu")
+    object Level:Routes("Level")
+    object History:Routes("History")
+    object Profile:Routes("Profile")
+    object SpecialOffers:Routes("Special Offers")
+    object Contact:Routes("Contact")
 }
