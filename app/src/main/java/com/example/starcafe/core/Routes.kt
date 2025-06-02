@@ -6,6 +6,7 @@ sealed class Routes(val route: String) {
     object Welcome:Routes("welcome")
     object Rewards:Routes("rewards")
     object Menu:Routes("menu")
+    object Level:Routes("level")
     object History:Routes("history")
     object Profile:Routes("profile")
     object SpecialOffers:Routes("special_offers")
