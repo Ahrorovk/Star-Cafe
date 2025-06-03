@@ -17,12 +17,16 @@ import com.example.starcafe.components.ProfileTopBar
 import com.example.starcafe.components.RewardsTopBar
 import com.example.starcafe.components.SpecialOfferTopBar
 import com.example.starcafe.core.Routes
+import com.example.starcafe.presentation.contact.ContactLocationScreen
 import com.example.starcafe.presentation.home.HomeScreen
 import com.example.starcafe.presentation.home.HomeViewModel
+import com.example.starcafe.presentation.instruction.InstructionScreen
 import com.example.starcafe.presentation.menu.MenuScreen
 import com.example.starcafe.presentation.menu.MenuViewModel
+import com.example.starcafe.presentation.profile.ProfileScreen
 import com.example.starcafe.presentation.rewards.RewardsScreen
 import com.example.starcafe.presentation.rewards.RewardsViewModel
+import com.example.starcafe.presentation.special.offers.SpecialOfferScreen
 import com.example.starcafe.presentation.splash.SplashScreen
 import com.example.starcafe.presentation.welcome.WelcomeScreen
 
@@ -51,7 +55,8 @@ fun Navigation() {
         Routes.Profile.route,
         Routes.History.route,
         Routes.Contact.route,
-        Routes.Level.route
+        Routes.Level.route,
+        Routes.Instruction.route
     )
     val specialOfferTopBarScreen = listOf(
         Routes.SpecialOffers.route
@@ -83,10 +88,11 @@ fun Navigation() {
             composable(Routes.Home.route) { HomeScreen(navController, hiltViewModel<HomeViewModel>()) }
             composable(Routes.Rewards.route) { RewardsScreen(viewModel = hiltViewModel<RewardsViewModel>()) }
             composable(Routes.Menu.route) { MenuScreen(viewModel = hiltViewModel<MenuViewModel>()) }
-            /*composable(Routes.History.route) { HistoryScreen(navController) }
             composable(Routes.Profile.route) { ProfileScreen(navController) }
-            composable(Routes.SpecialOffers.route) { SpecialOffersScreen(navController) }
-            composable(Routes.Contact.route) { ContactLocationsScreen(navController) }*/
+            composable(Routes.Instruction.route) { InstructionScreen() }
+            composable(Routes.Contact.route) { ContactLocationScreen() }
+            composable(Routes.SpecialOffers.route) { SpecialOfferScreen() }
+            /*composable(Routes.History.route) { HistoryScreen(navController) }*/
         }
     }
 }
