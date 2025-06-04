@@ -31,6 +31,7 @@ import com.example.starcafe.core.Routes
 import com.example.starcafe.core.doesScreenHasBottomBar
 import com.example.starcafe.core.doesScreenHasTopAppBar
 import com.example.starcafe.core.getTopBarTitle
+import com.example.starcafe.presentation.contact.ContactLocationScreen
 import com.example.starcafe.presentation.home.HomeScreen
 import com.example.starcafe.presentation.home.HomeViewModel
 import com.example.starcafe.presentation.instruction.InstructionScreen
