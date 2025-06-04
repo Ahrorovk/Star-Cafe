@@ -33,10 +33,13 @@ import com.example.starcafe.core.doesScreenHasTopAppBar
 import com.example.starcafe.core.getTopBarTitle
 import com.example.starcafe.presentation.home.HomeScreen
 import com.example.starcafe.presentation.home.HomeViewModel
+import com.example.starcafe.presentation.instruction.InstructionScreen
 import com.example.starcafe.presentation.menu.MenuScreen
 import com.example.starcafe.presentation.menu.MenuViewModel
+import com.example.starcafe.presentation.profile.ProfileScreen
 import com.example.starcafe.presentation.rewards.RewardsScreen
 import com.example.starcafe.presentation.rewards.RewardsViewModel
+import com.example.starcafe.presentation.special.offers.SpecialOfferScreen
 import com.example.starcafe.presentation.splash.SplashScreen
 import com.example.starcafe.presentation.welcome.WelcomeScreen
 
@@ -45,7 +48,6 @@ fun Navigation() {
     val navController = rememberNavController()
 
     val currentScreen = navController.currentBackStackEntryAsState().value?.destination?.route ?: ""
-
 
     Scaffold(
         topBar = {
@@ -118,10 +120,11 @@ fun Navigation() {
                 }
             }
             composable(Routes.Menu.route) { MenuScreen(viewModel = hiltViewModel<MenuViewModel>()) }
-            /*composable(Routes.History.route) { HistoryScreen(navController) }
             composable(Routes.Profile.route) { ProfileScreen(navController) }
-            composable(Routes.SpecialOffers.route) { SpecialOffersScreen(navController) }
-            composable(Routes.Contact.route) { ContactLocationsScreen(navController) }*/
+            composable(Routes.Instruction.route) { InstructionScreen() }
+            composable(Routes.Contact.route) { ContactLocationScreen() }
+            composable(Routes.SpecialOffers.route) { SpecialOfferScreen() }
+            /*composable(Routes.History.route) { HistoryScreen(navController) }*/
         }
     }
 }
