@@ -32,9 +32,13 @@ import com.example.starcafe.core.doesScreenHasBottomBar
 import com.example.starcafe.core.doesScreenHasTopAppBar
 import com.example.starcafe.core.getTopBarTitle
 import com.example.starcafe.presentation.contact.ContactLocationScreen
+import com.example.starcafe.presentation.history.TransactionHistoryScreen
+import com.example.starcafe.presentation.history.TransactionViewModel
 import com.example.starcafe.presentation.home.HomeScreen
 import com.example.starcafe.presentation.home.HomeViewModel
 import com.example.starcafe.presentation.instruction.InstructionScreen
+import com.example.starcafe.presentation.loyalty.LoyaltyLevelScreen
+import com.example.starcafe.presentation.loyalty.LoyaltyViewModel
 import com.example.starcafe.presentation.menu.MenuScreen
 import com.example.starcafe.presentation.menu.MenuViewModel
 import com.example.starcafe.presentation.profile.ProfileScreen
@@ -125,7 +129,24 @@ fun Navigation() {
             composable(Routes.Instruction.route) { InstructionScreen() }
             composable(Routes.Contact.route) { ContactLocationScreen() }
             composable(Routes.SpecialOffers.route) { SpecialOfferScreen() }
-            /*composable(Routes.History.route) { HistoryScreen(navController) }*/
+            composable(Routes.History.route) {
+                val viewModel = hiltViewModel<TransactionViewModel>()
+                val state = viewModel.state.collectAsState()
+                TransactionHistoryScreen(state.value) { event ->
+                    when (event) {
+                        else -> viewModel.onEvent(event)
+                    }
+                }
+            }
+            composable(Routes.Level.route) {
+                val viewModel = hiltViewModel<LoyaltyViewModel>()
+                val state = viewModel.state.collectAsState()
+                LoyaltyLevelScreen(state.value) { event ->
+                    when (event) {
+                        else -> viewModel.onEvent(event)
+                    }
+                }
+            }
         }
     }
 }

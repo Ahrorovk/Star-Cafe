@@ -5,7 +5,8 @@ fun doesScreenHasBottomBar(currentScreen: String): Boolean =
             currentScreen != Routes.Welcome.route &&
             currentScreen != Routes.Contact.route &&
             currentScreen != Routes.History.route &&
-            currentScreen != Routes.Profile.route
+            currentScreen != Routes.Profile.route &&
+            currentScreen != Routes.Level.route
 
 fun doesScreenHasTopAppBar(currentScreen: String): Boolean =
     currentScreen != Routes.Splash.route &&
