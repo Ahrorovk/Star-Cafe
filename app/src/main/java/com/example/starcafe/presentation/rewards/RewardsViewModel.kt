@@ -4,17 +4,25 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.starcafe.R
+import com.example.starcafe.data.CoreRepositoryImpl
 import com.example.starcafe.data.local.dataStore.DataStoreManager
 import com.example.starcafe.data.model.RewardItem
+import com.example.starcafe.data.model.TransactionEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class RewardsViewModel @Inject constructor(@ApplicationContext private val context: Context) : ViewModel() {
+class RewardsViewModel @Inject constructor(
+    private val dataStoreManager: DataStoreManager,
+    private val coreRepositoryImpl: CoreRepositoryImpl
+) : ViewModel() {
     private val _state = MutableStateFlow(
         RewardsState(
             reward = listOf(
@@ -26,8 +34,10 @@ class RewardsViewModel @Inject constructor(@ApplicationContext private val conte
             )
         )
     )
-    val state = _state
-    val dataStore = DataStoreManager(context)
+    val state = _state.stateIn(
+        viewModelScope, SharingStarted.WhileSubscribed(5000L),
+        RewardsState()
+    )
 
     fun onEvent(event: RewardsIntent) {
         when (event) {
@@ -37,6 +47,18 @@ class RewardsViewModel @Inject constructor(@ApplicationContext private val conte
                         selectedItem = event.item,
                         isDialogVisible = true
                     )
+                }
+                viewModelScope.launch {
+                    dataStoreManager.getTotalSpentStars().onEach { stars ->
+                        coreRepositoryImpl.insert(
+                            TransactionEntity(
+                                null,
+                                "Redeemed:${event.item.name}",
+                                System.currentTimeMillis(),
+                                stars * (-1)
+                            )
+                        )
+                    }
                 }
             }
 
@@ -52,10 +74,10 @@ class RewardsViewModel @Inject constructor(@ApplicationContext private val conte
             is RewardsIntent.OnRemoveStarClick -> {
                 viewModelScope.launch {
                     val cost = event.item.points.toIntOrNull() ?: 0
-                    val success = dataStore.spendStars(cost)
+                    val success = dataStoreManager.spendStars(cost)
 
                     if (success) {
-                        dataStore.increaseTotalSpentStars(cost)
+                        dataStoreManager.increaseTotalSpentStars(cost)
 
 //                        _state.value = _state.value.copy(
 //                            selectedItem = null
@@ -64,12 +86,13 @@ class RewardsViewModel @Inject constructor(@ApplicationContext private val conte
                         // Если не хватает звёзд — можно показать сообщение или оставить диалог
                         _state.update {
                             it.copy(
-                                // может быть: error = "Not enough stars"
+                                error = "Not enough stars"
                             )
                         }
                     }
                 }
             }
+
             else -> {}
         }
     }
