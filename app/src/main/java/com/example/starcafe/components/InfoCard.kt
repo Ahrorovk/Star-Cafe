@@ -54,7 +54,8 @@ fun InfoCard(
                 text = primaryText,
                 color = primaryColor,
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                maxLines = 1
             )
         }
         if (!secondaryText.isNullOrEmpty()) {

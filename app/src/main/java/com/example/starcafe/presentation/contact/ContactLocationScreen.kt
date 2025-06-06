@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -40,24 +41,26 @@ fun ContactLocationScreen() {
         )
     )
 
-    Column(
+    LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp)
     ) {
-        Text(
-            "Contact & Locations",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.fillMaxWidth(),
-            textAlign = TextAlign.Center,
-            color = Color.White
-        )
-        Spacer(modifier = Modifier.height(16.dp))
-        starCafeLocations.forEach { item ->
-            LocationInfoItem(
-                contactItem = item
+        item {
+            Text(
+                "Contact & Locations",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                color = Color.White
             )
+            Spacer(modifier = Modifier.height(16.dp))
+            starCafeLocations.forEach { item ->
+                LocationInfoItem(
+                    contactItem = item
+                )
+            }
         }
     }
 }

@@ -1,17 +1,15 @@
 package com.example.starcafe.presentation.home
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.starcafe.data.CoreRepositoryImpl
 import com.example.starcafe.data.local.dataStore.DataStoreManager
 import com.example.starcafe.data.model.TransactionEntity
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -41,13 +39,15 @@ class HomeViewModel @Inject constructor(
         when (event) {
             is HomeIntent.LoadInitialData -> {
                 viewModelScope.launch {
-                    _state.update {
-                        it.copy(
-                            randomNumber = dataStoreManager.getOrGenerateRandomNumber(),
-                            qrCode = Random.nextLong(1000000000L, 9999999999L).toString(),
-                            loyaltyLevel = calculateLoyaltyLevel(dataStoreManager.getTotalSpentStars())
-                        )
-                    }
+                    dataStoreManager.getTotalSpentStars().onEach { total ->
+                        _state.update {
+                            it.copy(
+                                randomNumber = dataStoreManager.getOrGenerateRandomNumber(),
+                                qrCode = Random.nextLong(1000000000L, 9999999999L).toString(),
+                                loyaltyLevel = calculateLoyaltyLevel(total)
+                            )
+                        }
+                    }.launchIn(viewModelScope)
                 }
             }
 
@@ -70,9 +70,10 @@ class HomeViewModel @Inject constructor(
                         dataStoreManager.addStars(starsToAdd)
                         _state.update {
                             it.copy(
-                            inputStars = "",
-                            showDialog = false
-                        ) }
+                                inputStars = "",
+                                showDialog = false
+                            )
+                        }
                         coreRepositoryImpl.insert(
                             TransactionEntity(
                                 null,
@@ -84,6 +85,8 @@ class HomeViewModel @Inject constructor(
                     }
                 }
             }
+
+            else -> {}
         }
     }
 
@@ -95,12 +98,12 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun calculateLoyaltyLevel(totalSpent: Flow<Int>): String {
-        val value = totalSpent.first()
+    private fun calculateLoyaltyLevel(totalSpent: Int): String {
         return when {
-            value >= 3000 -> "Gold"
-            value >= 2000 -> "Silver"
-            value >= 1000 -> "Bronze"
+            totalSpent < 1 -> "Starter"
+            totalSpent <= 1000 -> "Bronze"
+            totalSpent <= 5000 -> "Silver"
+            totalSpent > 5000 -> "Gold"
             else -> "Starter"
         }
     }

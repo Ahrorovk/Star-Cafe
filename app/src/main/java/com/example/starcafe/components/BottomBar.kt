@@ -19,6 +19,7 @@ import androidx.compose.material.icons.filled.LocalCafe
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.starcafe.R
 import com.example.starcafe.components.BottomNavItem
 import com.example.starcafe.core.Routes
 import com.example.starcafe.data.model.BottomNavDestination
@@ -49,21 +50,21 @@ val bottomNavDestinations = listOf(
     BottomNavDestination(
         label = "Home",
         destinationRoute = Routes.Home.route,
-        icon = Icons.Default.Home
+        icon = R.drawable.home
     ),
     BottomNavDestination(
         label = "Rewards",
         destinationRoute = Routes.Rewards.route,
-        icon = Icons.Default.CardGiftcard
+        icon = R.drawable.gift
     ),
     BottomNavDestination(
         label = "Menu",
         destinationRoute = Routes.Menu.route,
-        icon = Icons.Default.LocalCafe
+        icon = R.drawable.tea
     ),
     BottomNavDestination(
         label = "Special Offers",
         destinationRoute = Routes.SpecialOffers.route,
-        icon = Icons.Default.Diamond
+        icon = R.drawable.diamond
     ),
 )

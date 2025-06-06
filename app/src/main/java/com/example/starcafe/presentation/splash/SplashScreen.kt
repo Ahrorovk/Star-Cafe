@@ -18,11 +18,7 @@ import androidx.navigation.NavController
 import kotlinx.coroutines.delay
 
 @Composable
-fun SplashScreen(navController: NavController) {
-    LaunchedEffect(Unit) {
-        delay(3000)
-        navController.navigate("welcome")
-    }
+fun SplashScreen() {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center

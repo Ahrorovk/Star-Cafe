@@ -13,7 +13,7 @@ import com.example.starcafe.components.ProfileMenuItem
 import com.example.starcafe.core.Routes
 
 @Composable
-fun ProfileScreen(navController: NavController) {
+fun ProfileScreen(onNavigate: (String) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -24,7 +24,7 @@ fun ProfileScreen(navController: NavController) {
         menuItems.forEach { (title, route) ->
             ProfileMenuItem(
                 title,
-                onClick = {navController.navigate(route)}
+                onClick = { onNavigate(route) }
             )
         }
     }

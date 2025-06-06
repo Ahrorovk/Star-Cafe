@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.StarBorder
@@ -53,7 +54,7 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
     val qrCodeBitmap = remember(state.qrCode) {
         val size = 524
 
-        if (state.qrCode.isNullOrBlank()) return@remember null // <--- добавлено
+        if (state.qrCode.isNullOrBlank()) return@remember null
 
         val bits = QRCodeWriter().encode(state.qrCode, BarcodeFormat.QR_CODE, size, size)
         val bitmap = android.graphics.Bitmap.createBitmap(size, size, android.graphics.Bitmap.Config.RGB_565)
@@ -70,130 +71,107 @@ fun HomeScreen(navController: NavController, viewModel: HomeViewModel) {
             .fillMaxSize()
             .background(Color.Black)
     ) {
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(bottom = 56.dp),
+                .padding(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 24.dp)
-                    .padding(start = 16.dp, end = 16.dp)
-            ) {
-                Box(modifier = Modifier.fillMaxWidth()) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(R.drawable.home),
-                        contentDescription = "Menu",
-                        modifier = Modifier.align(Alignment.CenterStart),
-                        tint = Color.White
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(340.dp)
+                        .padding(top = 16.dp)
+                        .background(Color(0xFF151617)),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Text(
+                        text = "Show this code to earn stars",
+                        color = Color.White,
+                        fontSize = 16.sp,
+                        modifier = Modifier.padding(top = 16.dp)
                     )
 
-                    Image(
-                        painter = painterResource(R.drawable.profile),
-                        contentDescription = "Settings",
-                        modifier = Modifier
-                            .align(Alignment.CenterEnd)
-                            .clickable { navController.navigate(Routes.Profile.route) }
-                    )
-                }
-            }
+                    Spacer(modifier = Modifier.height(16.dp))
 
-            Column (
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(340.dp)
-                    .padding(top = 16.dp)
-                    .background(Color(0xFF151617)),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    text = "Show this code to earn stars",
-                    color = Color.White,
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(top = 16.dp)
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                if (qrCodeBitmap != null) {
-                    Image(
-                        bitmap = qrCodeBitmap.asImageBitmap(),
-                        contentDescription = "QR Code",
-                        modifier = Modifier.size(220.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "${state.randomNumber}",
-                    color = Color.White,
-                    letterSpacing = 2.sp
-                )
-            }
-
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly
-            ) {
-                InfoCard(
-                    title = "Star Balance",
-                    icon = { Text("⭐", fontSize = 20.sp, color = Color(0xFFF68B0D)) },
-                    primaryText = "${state.starBalance}",
-                    primaryColor = Color.White,
-                )
-
-                // Определяем иконку и кэшбэк в зависимости от уровня
-                val loyaltyLevel = state.loyaltyLevel
-                val (cashbackText, iconRes) = when (loyaltyLevel) {
-                    "Gold" -> "7% cashback" to R.drawable.level_gold
-                    "Silver" -> "5% cashback" to R.drawable.loyalty_level
-                    "Bronze" -> "3% cashback" to R.drawable.level_bronze
-                    else -> "0% cashback" to R.drawable.level_starter
-                }
-
-                InfoCard(
-                    title = "Loyalty Level",
-                    icon = {
-                        Icon(
-                            painter = painterResource(id = iconRes),
-                            contentDescription = null,
-                            tint = Color.Unspecified
+                    if (qrCodeBitmap != null) {
+                        Image(
+                            bitmap = qrCodeBitmap.asImageBitmap(),
+                            contentDescription = "QR Code",
+                            modifier = Modifier.size(220.dp)
                         )
-                    },
-                    primaryText = loyaltyLevel,
-                    secondaryText = cashbackText,
-                    primaryColor = Color.White,
+                    }
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        text = "${state.randomNumber}",
+                        color = Color.White,
+                        letterSpacing = 2.sp
+                    )
+                }
+
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    InfoCard(
+                        title = "Star Balance",
+                        icon = { Text("⭐", fontSize = 20.sp, color = Color(0xFFF68B0D)) },
+                        primaryText = "${state.starBalance}",
+                        primaryColor = Color.White,
+                    )
+
+                    // Определяем иконку и кэшбэк в зависимости от уровня
+                    val loyaltyLevel = state.loyaltyLevel
+                    val (cashbackText, iconRes) = when (loyaltyLevel) {
+                        "Gold" -> "7% cashback" to R.drawable.level_gold
+                        "Silver" -> "5% cashback" to R.drawable.loyalty_level
+                        "Bronze" -> "3% cashback" to R.drawable.level_bronze
+                        else -> "0% cashback" to R.drawable.level_starter
+                    }
+
+                    InfoCard(
+                        title = "Loyalty Level",
+                        icon = {
+                            Icon(
+                                painter = painterResource(id = iconRes),
+                                contentDescription = null,
+                                tint = Color.Unspecified
+                            )
+                        },
+                        primaryText = loyaltyLevel,
+                        secondaryText = cashbackText,
+                        primaryColor = Color.White,
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Button(
+                    onClick = { viewModel.onEvent(HomeIntent.OnAddStarsClicked) },
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00AEEF)),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(start = 16.dp, end = 16.dp),
+                    shape = RoundedCornerShape(10.dp)
+                ) {
+                    Text("ADD STARS", color = Color.White)
+                }
+            }
+        }
+            if (state.showDialog) {
+                StarDialog(
+                    onDismiss = { viewModel.onEvent(HomeIntent.OnDismissDialog) },
+                    onConfirm = { viewModel.onEvent(HomeIntent.OnConfirmAddStars)
+                        viewModel.onEvent(HomeIntent.OnInputStarsChanged(""))},
+                    inputStars = state.inputStars,
+                    onStarsChanged = { viewModel.onEvent(HomeIntent.OnInputStarsChanged(it)) }
                 )
             }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Button(
-                onClick = { viewModel.onEvent(HomeIntent.OnAddStarsClicked) },
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00AEEF)),
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(48.dp)
-                    .padding(start = 16.dp, end = 16.dp),
-                shape = RoundedCornerShape(10.dp)
-            ) {
-                Text("ADD STARS", color = Color.White)
-            }
-        }
-
-        if (state.showDialog) {
-            StarDialog (
-                onDismiss = { viewModel.onEvent(HomeIntent.OnDismissDialog) },
-                onConfirm = { viewModel.onEvent(HomeIntent.OnConfirmAddStars) },
-                inputStars = state.inputStars,
-                onStarsChanged = { viewModel.onEvent(HomeIntent.OnInputStarsChanged(it)) }
-            )
-        }
     }
 }

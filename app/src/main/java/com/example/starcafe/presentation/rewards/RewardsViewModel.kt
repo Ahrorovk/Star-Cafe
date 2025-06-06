@@ -39,27 +39,21 @@ class RewardsViewModel @Inject constructor(
         RewardsState()
     )
 
+    init {
+        dataStoreManager.getTotalSpentStars().onEach { stars ->
+            _state.update {
+                it.copy(
+                    totalScore = stars
+                )
+            }
+
+        }
+    }
+
     fun onEvent(event: RewardsIntent) {
         when (event) {
             is RewardsIntent.OnRewardClick -> {
-                _state.update {
-                    it.copy(
-                        selectedItem = event.item,
-                        isDialogVisible = true
-                    )
-                }
-                viewModelScope.launch {
-                    dataStoreManager.getTotalSpentStars().onEach { stars ->
-                        coreRepositoryImpl.insert(
-                            TransactionEntity(
-                                null,
-                                "Redeemed:${event.item.name}",
-                                System.currentTimeMillis(),
-                                stars * (-1)
-                            )
-                        )
-                    }
-                }
+
             }
 
             is RewardsIntent.DismissDialog -> {
@@ -78,7 +72,22 @@ class RewardsViewModel @Inject constructor(
 
                     if (success) {
                         dataStoreManager.increaseTotalSpentStars(cost)
-
+                        _state.update {
+                            it.copy(
+                                selectedItem = event.item,
+                                isDialogVisible = true
+                            )
+                        }
+                        viewModelScope.launch {
+                            coreRepositoryImpl.insert(
+                                TransactionEntity(
+                                    null,
+                                    "Redeemed:${event.item.name}",
+                                    System.currentTimeMillis(),
+                                    (event.item.points.toIntOrNull() ?: 0)*(-1)
+                                )
+                            )
+                        }
 //                        _state.value = _state.value.copy(
 //                            selectedItem = null
 //                        )

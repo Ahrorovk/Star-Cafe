@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -39,9 +40,11 @@ fun RowScope.BottomNavItem(
                 Routes.Rewards.route -> {
                     it.route == Routes.Rewards.route
                 }
+
                 Routes.Menu.route -> {
                     it.route == Routes.Menu.route
                 }
+
                 Routes.SpecialOffers.route -> {
                     it.route == Routes.SpecialOffers.route
                 }
@@ -58,21 +61,25 @@ fun RowScope.BottomNavItem(
         icon = {
             Icon(
                 modifier = Modifier.size(24.dp),
-                imageVector = item.icon,
+                painter = painterResource(item.icon),
                 contentDescription = "BottomNavIcon",
-                tint = Color(0xFF999999)
+                tint = if (currentDestination?.route == item.destinationRoute) Color(0xFF0FA2F7) else Color(
+                    0xFF999999
+                )
             )
         },
         label = {
             Text(
                 text = item.label,
-                color = Color.White,
+                color = if (currentDestination?.route == item.destinationRoute) Color(0xFFF68B0D) else Color(
+                    0xFF999999
+                ),
                 textAlign = TextAlign.Center,
                 style = MaterialTheme.typography.labelSmall
             )
         },
         alwaysShowLabel = true,
-        selectedContentColor = Color(0xFFFFA726),
+        selectedContentColor = Color(0xFFF68B0D),
         unselectedContentColor = Color.Gray
     )
 }

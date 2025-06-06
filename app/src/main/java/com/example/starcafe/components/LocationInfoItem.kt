@@ -26,7 +26,6 @@ fun LocationInfoItem(contactItem: ContactItem) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(180.dp)
             .clip(RoundedCornerShape(8.dp))
             .background(color = Color(0xFF151617), RoundedCornerShape(8.dp))
     ) {

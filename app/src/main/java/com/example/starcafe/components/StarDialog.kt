@@ -13,9 +13,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.OutlinedButton
+import androidx.compose.material.TextField
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -24,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -35,6 +40,9 @@ fun StarDialog(
     inputStars: String,
     onStarsChanged: (String) -> Unit
 ) {
+    val isValid =
+        inputStars.length in 1..4 && inputStars.toIntOrNull()?.let { it in 1..9999 } == true
+
     Dialog(onDismissRequest = onDismiss) {
         Box(
             modifier = Modifier
@@ -66,13 +74,18 @@ fun StarDialog(
                 Spacer(modifier = Modifier.height(8.dp))
                 OutlinedTextField(
                     value = inputStars,
-                    onValueChange = { onStarsChanged(it) },
+                    onValueChange = {
+                        if (it.length <= 4 && it.all { char -> char.isDigit() })
+                            onStarsChanged(it)
+                    },
                     label = { Text("Enter the number") },
                     colors = TextFieldDefaults.colors(
                         unfocusedContainerColor = Color(0xFF2C2C2C),
                         focusedContainerColor = Color(0xFF2C2C2C),
                         focusedTextColor = Color.White
-                    )
+                    ),
+                    singleLine = true,
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
 
                 Spacer(modifier = Modifier.height(28.dp))
@@ -81,7 +94,7 @@ fun StarDialog(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.Center
-                ){
+                ) {
                     OutlinedButton(
                         onClick = onDismiss,
                         shape = RoundedCornerShape(10.dp),
@@ -96,7 +109,14 @@ fun StarDialog(
                     Spacer(modifier = Modifier.width(30.dp))
                     Button(
                         onClick = { onConfirm(inputStars) },
-                        shape = RoundedCornerShape(10.dp)
+                        shape = RoundedCornerShape(10.dp),
+                        colors = ButtonColors(
+                            containerColor = Color(0xFF0FA2F7),
+                            contentColor = Color.Black,
+                            disabledContainerColor = Color.LightGray,
+                            disabledContentColor = Color.DarkGray
+                        ),
+                        enabled = isValid
                     ) {
                         Text("Confirm", color = Color.Black)
                     }

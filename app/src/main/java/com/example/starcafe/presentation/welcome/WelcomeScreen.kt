@@ -27,7 +27,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.starcafe.R
 
 @Composable
-fun WelcomeScreen(navController: NavController) {
+fun WelcomeScreen(onClick:()->Unit) {
     Box(modifier = Modifier.fillMaxSize()) {
         Image(
             painter = painterResource(id = R.drawable.welcome),
@@ -64,7 +64,7 @@ fun WelcomeScreen(navController: NavController) {
             Spacer(modifier = Modifier.height(24.dp))
 
             Button(
-                onClick = { navController.navigate("home") },
+                onClick = onClick,
 
                 colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF00AEEF)),
 
@@ -78,11 +78,4 @@ fun WelcomeScreen(navController: NavController) {
             }
         }
     }
-}
-
-@Preview
-@Composable
-fun preview() {
-    val navController = rememberNavController()
-    WelcomeScreen(navController)
 }

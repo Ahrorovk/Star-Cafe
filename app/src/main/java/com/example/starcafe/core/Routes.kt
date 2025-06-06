@@ -4,7 +4,7 @@ sealed class Routes(val route: String) {
     object Home : Routes("Home")
     object Splash : Routes("Splash")
     object Welcome : Routes("Welcome")
-    object Rewards : Routes("Eewards")
+    object Rewards : Routes("Rewards")
     object Menu : Routes("Menu")
     object Level : Routes("Level")
     object History : Routes("History")

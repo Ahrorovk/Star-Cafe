@@ -1,7 +1,6 @@
 package com.example.starcafe.data.local.dataStore
 
 import android.content.Context
-import android.content.SharedPreferences
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
@@ -18,20 +17,30 @@ class DataStoreManager(private val context: Context) {
         val RANDOM_NUMBER_KEY = intPreferencesKey("random_number")
         val STAR_BALANCE_KEY = intPreferencesKey("star_balance")
         val TOTAL_SPENT_KEY = intPreferencesKey("total_spent_stars")
+        val TOKEN_STATE_KEY = stringPreferencesKey("token_state_key")
     }
 
     suspend fun getOrGenerateRandomNumber(): Int {
         val pref = context.dataStore.data.first()
         val existing = pref[RANDOM_NUMBER_KEY]
 
-        return if(existing != null) {
+        return if (existing != null) {
             existing
-        }
-        else {
+        } else {
             val newRandom = (111111111..999999999).random()
             context.dataStore.edit { it[RANDOM_NUMBER_KEY] = newRandom }
             newRandom
         }
+    }
+
+    suspend fun updateTokenState(token: String) {
+        context.dataStore.edit { preference ->
+            preference[TOKEN_STATE_KEY] = token
+        }
+    }
+
+    val getTokenState = context.dataStore.data.map {
+        it[TOKEN_STATE_KEY] ?: ""
     }
 
     fun getTotalSpentStars(): Flow<Int> {
