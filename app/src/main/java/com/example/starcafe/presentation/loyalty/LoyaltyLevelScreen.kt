@@ -160,7 +160,7 @@ fun LoyaltyLevelScreen(
     }
 }
 fun calculateLevelProgress(totalSpent: Int): LoyaltyLevelDisplayState {
-    val stages = listOf(0, 1000, 5000, Int.MAX_VALUE) // Starter, Bronze, Silver, Gold
+    val stages = listOf(0, 1000, 5000, 5000) // Starter, Bronze, Silver, Gold
     val stageIndex = stages.indexOfLast { totalSpent >= it }
 
     val currentStart = stages.getOrElse(stageIndex) { 0 }
